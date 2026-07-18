@@ -7,4 +7,4 @@
 1010,alok mishra,22,msc
 1011,madan sharma,12,6th
 1012,aatiya kumar,19,btech
-1013,chotu lala,16,11th
+1016,bharti shah,26,bsc
