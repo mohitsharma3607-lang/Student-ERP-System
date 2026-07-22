@@ -1,3 +1,8 @@
+from datetime import datetime
+
+# ==============================
+# Student Module
+# ==============================
 from modules.student import (
     add_student,
     view_students,
@@ -6,22 +11,49 @@ from modules.student import (
     delete_student,
 )
 
+# ==============================
+# Other Modules
+# ==============================
 from modules.dashboard import dashboard
 from modules.analytics import analytics
 from modules.reports import reports_menu
 from modules.backup import backup_menu
-from datetime import datetime
+from modules.export_csv import export_to_csv
+from modules.login import login
+from modules.menu import main_menu
+from modules.user import add_user, view_users
+from modules.user import add_user, view_users
+
+# ==============================
+# Database
+# ==============================
+from database.database import (
+    initialize_database,
+)
+# ==============================
+# Initialize Database
+# ==============================
+initialize_database()
+
+
+# Uncomment only for testing
+# show_all_students()
+
 
 def show_datetime():
+    """Display current date and time."""
     now = datetime.now()
+
     print("\n===================================")
     print("Current Date :", now.strftime("%d-%m-%Y"))
     print("Current Time :", now.strftime("%I:%M:%S %p"))
     print("===================================")
 
-def main():
 
+def main():
     while True:
+
+        show_datetime()
 
         print("\n========== STUDENT ERP ==========")
         print("1. Add Student")
@@ -33,19 +65,18 @@ def main():
         print("7. Analytics")
         print("8. Reports")
         print("9. Backup")
-        print("10. Exit")
+        print("10. Export CSV")
+        print("11. User Management")
+        print("12. View Users")
+        print("13. Exit")
         print("=================================")
-
-        show_datetime()
 
         choice = input("Enter your choice : ").strip()
 
         if choice == "1":
             add_student()
-
         elif choice == "2":
             view_students()
-
         elif choice == "3":
             search_student()
 
@@ -68,11 +99,29 @@ def main():
             backup_menu()
 
         elif choice == "10":
-            print("\n👋 Thank you for using Student ERP!")
+            export_to_csv()
+
+        elif choice == "11":
+            add_user()
+
+        elif choice == "12":
+            view_users()
+
+        elif choice == "13":
+            print("\n👋 Thank You for using Student ERP.")
             break
 
         else:
             print("\n❌ Invalid Choice! Please try again.")
 
+
 if __name__ == "__main__":
-    main()
+
+    if not login():
+        exit()
+
+    dashboard()
+
+    input("\nPress Enter to Continue...")
+
+    main_menu()
