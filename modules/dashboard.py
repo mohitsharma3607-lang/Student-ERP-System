@@ -1,5 +1,5 @@
 from datetime import datetime
-from utils.file_handler import read_students
+import database.database
 
 
 def dashboard():
@@ -7,28 +7,14 @@ def dashboard():
     Display Student ERP Dashboard
     """
 
-    students = read_students()
+    students = database.database.get_all_students()
 
-    total_students = 0
+    total_students = len(students)
     adults = 0
     minors = 0
     courses = set()
 
-    for student in students:
-
-        student = student.strip()
-
-        if not student:
-            continue
-
-        data = student.split(",")
-
-        if len(data) != 4:
-            continue
-
-        student_id, name, age, course = data
-
-        total_students += 1
+    for student_id, name, age, course in students:
 
         age = int(age)
 

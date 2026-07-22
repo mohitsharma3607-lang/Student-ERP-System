@@ -1,6 +1,6 @@
 import csv
 import os
-from utils.file_handler import read_students
+import database.database
 
 EXPORT_FOLDER = "exports"
 
@@ -10,7 +10,7 @@ def export_to_csv():
     Export students data to CSV.
     """
 
-    students = read_students()
+    students = database.database.get_all_students()
 
     if not students:
         print("\n❌ No Student Found!")
@@ -26,14 +26,8 @@ def export_to_csv():
 
         writer.writerow(["Student ID", "Name", "Age", "Course"])
 
-        for student in students:
-
-            student = student.strip()
-
-            if not student:
-                continue
-
-            writer.writerow(student.split(","))
+        for student_id, name, age, course in students:
+            writer.writerow([student_id, name, age, course])
 
     print("\n✅ CSV Export Successful!")
     print(f"📁 File Saved: {file_path}")

@@ -2,17 +2,17 @@ import os
 import shutil
 from datetime import datetime
 
-DATA_FILE = "data/students.txt"
+DATABASE_FILE = "database/student_erp.db"
 BACKUP_FOLDER = "backups"
 
 
 def create_backup():
     """
-    Create backup of students.txt
+    Create SQLite database backup
     """
 
-    if not os.path.exists(DATA_FILE):
-        print("\n❌ Data file not found!")
+    if not os.path.exists(DATABASE_FILE):
+        print("\n❌ Database file not found!")
         return
 
     os.makedirs(BACKUP_FOLDER, exist_ok=True)
@@ -21,18 +21,18 @@ def create_backup():
 
     backup_file = os.path.join(
         BACKUP_FOLDER,
-        f"students_backup_{timestamp}.txt"
+        f"student_erp_backup_{timestamp}.db"
     )
 
-    shutil.copy(DATA_FILE, backup_file)
+    shutil.copy2(DATABASE_FILE, backup_file)
 
-    print("\n✅ Backup Created Successfully!")
+    print("\n✅ Database Backup Created Successfully!")
     print(f"📁 {backup_file}")
 
 
 def restore_latest_backup():
     """
-    Restore latest backup
+    Restore latest database backup
     """
 
     if not os.path.exists(BACKUP_FOLDER):
@@ -42,7 +42,7 @@ def restore_latest_backup():
     backups = [
         os.path.join(BACKUP_FOLDER, file)
         for file in os.listdir(BACKUP_FOLDER)
-        if file.endswith(".txt")
+        if file.endswith(".db")
     ]
 
     if not backups:
@@ -51,9 +51,9 @@ def restore_latest_backup():
 
     latest_backup = max(backups, key=os.path.getmtime)
 
-    shutil.copy(latest_backup, DATA_FILE)
+    shutil.copy2(latest_backup, DATABASE_FILE)
 
-    print("\n✅ Backup Restored Successfully!")
+    print("\n✅ Database Restored Successfully!")
     print(f"📁 Restored From: {latest_backup}")
 
 

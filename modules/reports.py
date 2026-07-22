@@ -1,4 +1,4 @@
-from utils.file_handler import read_students
+import database.database
 
 
 def total_students_report():
@@ -6,34 +6,20 @@ def total_students_report():
     Display total student report.
     """
 
-    students = read_students()
+    students = database.database.get_all_students()
 
     if not students:
         print("\n❌ No Student Found!")
         return
 
-    total_students = 0
+    total_students = len(students)
     total_age = 0
     adults = 0
     minors = 0
 
-    for student in students:
-
-        student = student.strip()
-
-        if not student:
-            continue
-
-        data = student.split(",")
-
-        if len(data) != 4:
-            continue
-
-        student_id, name, age, course = data
+    for student_id, name, age, course in students:
 
         age = int(age)
-
-        total_students += 1
         total_age += age
 
         if age >= 18:
@@ -58,7 +44,7 @@ def course_report():
     Display course-wise report.
     """
 
-    students = read_students()
+    students = database.database.get_all_students()
 
     if not students:
         print("\n❌ No Student Found!")
@@ -66,20 +52,7 @@ def course_report():
 
     course_count = {}
 
-    for student in students:
-
-        student = student.strip()
-
-        if not student:
-            continue
-
-        data = student.split(",")
-
-        if len(data) != 4:
-            continue
-
-        student_id, name, age, course = data
-
+    for student_id, name, age, course in students:
         course_count[course] = course_count.get(course, 0) + 1
 
     print("\n" + "=" * 50)
@@ -97,38 +70,24 @@ def age_report():
     Display age report.
     """
 
-    students = read_students()
+    students = database.database.get_all_students()
 
     if not students:
         print("\n❌ No Student Found!")
         return
 
-    total_students = 0
+    total_students = len(students)
     total_age = 0
 
     oldest_name = ""
     oldest_age = 0
 
     youngest_name = ""
-    youngest_age = 999
+    youngest_age = float("inf")
 
-    for student in students:
-
-        student = student.strip()
-
-        if not student:
-            continue
-
-        data = student.split(",")
-
-        if len(data) != 4:
-            continue
-
-        student_id, name, age, course = data
+    for student_id, name, age, course in students:
 
         age = int(age)
-
-        total_students += 1
         total_age += age
 
         if age > oldest_age:
