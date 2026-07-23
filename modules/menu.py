@@ -20,8 +20,7 @@ from modules.analytics import analytics
 from modules.reports import reports_menu
 from modules.backup import backup_menu
 from modules.export_csv import export_to_csv
-
-
+from modules.attendance import attendance_menu
 # ==========================================
 # Student Management Menu
 # ==========================================
@@ -115,7 +114,7 @@ def main_menu():
         print("5. Reports")
         print("6. Backup")
         print("7. Export CSV")
-        print("8. Attendance (Coming Soon)")
+        print("8. Attendance Menu")
         print("9. Fees Management (Coming Soon)")
         print("10. Examination (Coming Soon)")
         print("11. Logout")
@@ -144,7 +143,7 @@ def main_menu():
             export_to_csv()
 
         elif choice == "8":
-            print("\n🚧 Attendance Module Coming Soon...")
+            attendance_menu()
 
         elif choice == "9":
             print("\n🚧 Fees Management Module Coming Soon...")

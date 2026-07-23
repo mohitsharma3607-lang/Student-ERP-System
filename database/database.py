@@ -29,6 +29,17 @@ def create_students_table():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS attendance(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id TEXT NOT NULL,
+            attendance_date TEXT NOT NULL,
+            status TEXT NOT NULL CHECK(status IN ('P','A')),
+            FOREIGN KEY(student_id)
+            REFERENCES students(student_id)
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -66,8 +77,8 @@ def create_default_admin():
 
     cursor.execute("""
         INSERT OR IGNORE INTO users
-        (username, password, role)
-        VALUES (?, ?, ?)
+        (username,password,role)
+        VALUES(?,?,?)
     """, ("admin", "admin123", "Admin"))
 
     conn.commit()
@@ -111,7 +122,6 @@ def generate_student_id():
         return "1001"
 
     return str(int(row[0]) + 1)
-
 # ==========================================
 # Insert Student
 # ==========================================
@@ -126,7 +136,6 @@ def insert_student(student_id, name, age, course):
         cursor.execute("""
             INSERT INTO students
             (student_id, name, age, course)
-
             VALUES (?, ?, ?, ?)
         """, (student_id, name, age, course))
 
@@ -152,7 +161,7 @@ def get_all_students():
     cursor.execute("""
         SELECT student_id, name, age, course
         FROM students
-        ORDER BY CAST(student_id AS INTEGER)
+        ORDER BY student_id
     """)
 
     students = cursor.fetchall()
@@ -174,7 +183,6 @@ def search_student(search_value):
     cursor.execute("""
         SELECT student_id, name, age, course
         FROM students
-
         WHERE student_id = ?
         OR LOWER(name) = LOWER(?)
     """, (search_value, search_value))
@@ -197,12 +205,10 @@ def update_student(student_id, name, age, course):
 
     cursor.execute("""
         UPDATE students
-
         SET
             name = ?,
             age = ?,
             course = ?
-
         WHERE student_id = ?
     """, (name, age, course, student_id))
 
@@ -247,7 +253,7 @@ def show_all_students():
     students = get_all_students()
 
     if not students:
-        print("\nNo students found.")
+        print("\n❌ No Students Found!")
         return
 
     print("\n" + "=" * 70)
@@ -263,3 +269,167 @@ def show_all_students():
         )
 
     print("=" * 70)
+# ==========================================
+# Mark Attendance
+# ==========================================
+
+def mark_attendance(student_id, attendance_date, status):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO attendance
+        (student_id, attendance_date, status)
+        VALUES (?, ?, ?)
+    """, (student_id, attendance_date, status))
+
+    conn.commit()
+    conn.close()
+
+
+# ==========================================
+# Get All Attendance
+# ==========================================
+
+def get_all_attendance():
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            attendance.id,
+            students.student_id,
+            students.name,
+            attendance.attendance_date,
+            attendance.status
+        FROM attendance
+        INNER JOIN students
+            ON attendance.student_id = students.student_id
+        ORDER BY attendance.attendance_date DESC,
+                 students.student_id
+    """)
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return records
+
+
+# ==========================================
+# Search Attendance
+# ==========================================
+
+def search_attendance(student_id):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            attendance.id,
+            students.student_id,
+            students.name,
+            attendance.attendance_date,
+            attendance.status
+        FROM attendance
+        INNER JOIN students
+            ON attendance.student_id = students.student_id
+        WHERE students.student_id = ?
+        ORDER BY attendance.attendance_date DESC
+    """, (student_id,))
+
+    records = cursor.fetchall()
+
+    conn.close()
+
+    return records
+
+
+# ==========================================
+# Update Attendance
+# ==========================================
+
+def update_attendance(attendance_id, status):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE attendance
+        SET status = ?
+        WHERE id = ?
+    """, (status, attendance_id))
+
+    conn.commit()
+
+    updated = cursor.rowcount
+
+    conn.close()
+
+    return updated > 0
+
+
+# ==========================================
+# Delete Attendance
+# ==========================================
+
+def delete_attendance(attendance_id):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM attendance
+        WHERE id = ?
+    """, (attendance_id,))
+
+    conn.commit()
+
+    deleted = cursor.rowcount
+
+    conn.close()
+
+    return deleted > 0
+
+# ==========================================
+# Check Attendance Already Exists
+# ==========================================
+
+def attendance_exists(student_id, attendance_date):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 1
+        FROM attendance
+        WHERE student_id = ?
+        AND attendance_date = ?
+    """, (student_id, attendance_date))
+
+    exists = cursor.fetchone() is not None
+
+    conn.close()
+
+    return exists
+
+def attendance_exists(student_id, attendance_date):
+
+    conn = connect_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT 1
+        FROM attendance
+        WHERE student_id = ?
+        AND attendance_date = ?
+    """, (student_id, attendance_date))
+
+    exists = cursor.fetchone() is not None
+
+    conn.close()
+
+    return exists

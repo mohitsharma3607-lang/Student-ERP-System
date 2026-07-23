@@ -23,6 +23,7 @@ from modules.login import login
 from modules.menu import main_menu
 from modules.user import add_user, view_users
 from modules.user import add_user, view_users
+from modules.attendance import attendance_menu
 
 # ==============================
 # Database
@@ -62,13 +63,14 @@ def main():
         print("4. Update Student")
         print("5. Delete Student")
         print("6. Dashboard")
-        print("7. Analytics")
-        print("8. Reports")
-        print("9. Backup")
-        print("10. Export CSV")
-        print("11. User Management")
-        print("12. View Users")
-        print("13. Exit")
+        print("7. Attendance Menu")
+        print("8. Analytics")
+        print("9. Reports")
+        print("10. Backup")
+        print("11. Export CSV")
+        print("12. User Management")
+        print("13. View Users")
+        print("14. Exit")
         print("=================================")
 
         choice = input("Enter your choice : ").strip()
@@ -90,23 +92,29 @@ def main():
             dashboard()
 
         elif choice == "7":
-            analytics()
+            attendance_menu()
 
         elif choice == "8":
-            reports_menu()
+            analytics()
 
         elif choice == "9":
-            backup_menu()
+            reports_menu()
 
         elif choice == "10":
-            export_to_csv()
+            backup_menu()
 
         elif choice == "11":
-            add_user()
+            export_to_csv()
 
         elif choice == "12":
+            add_user()
+
+        elif choice == "13":
             view_users()
 
+        elif choice == "14":
+            print("\n👋 Thank You for using Student ERP.")
+            break
         elif choice == "13":
             print("\n👋 Thank You for using Student ERP.")
             break
